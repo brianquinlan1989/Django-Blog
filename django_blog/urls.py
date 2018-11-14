@@ -17,17 +17,20 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.static import serve
 from django.conf import settings
-from blog.views import get_index, read_post, write_post, edit_read_post
+from blog.views import get_index
 from accounts.views import signup
+
+from blog import urls as blog_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('signup/', signup, name='signup'),
     
+    path('posts', include(blog_urls)),
+    
+    
+    path('signup/', signup, name='signup'),
     path('', get_index, name="index"),
-    path('read_post/<int:id>', read_post, name="read_post"),
-    path('write_post/', write_post, name="write_post"),
-    path('edit_post/id/<int:id>', edit_read_post, name="edit_post"),
     path('media/<path:path>', serve, {'document_root': settings. MEDIA_ROOT}),
 ]
+

@@ -1,10 +1,17 @@
 {% extends "base.html" %}
 {% load static from staticfiles %}
+
+{% block head_styles %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
+{% endblock %}
+
+
 {% block content %}
     <div class="row">
         <div class="col-md-2 col-sm-3 text-center">
             <a class="story-img" href="#">
-                <img src="https://via.placeholder.com/150" class="img-circle">
+                <img src="{{ MEDIA_URL }}{{ post.author.profile.image }}" class="img-circle">
             </a>
             <p><span class="boldtext">Author:</span> {{ post.author.username }}</p>
         </div>
@@ -26,7 +33,7 @@
                     <a href="{% url 'edit_post' post.id %}" class="btn btn-default">Edit Post</a>
                     {% endif %}
                     
-                    {% if can_publish %}
+                    {% if perms.blog.can_publish %}
                     <a href="#" class="btn btn-default">Publish Post</a>
                     {% endif %}
                 </div>

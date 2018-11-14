@@ -3,6 +3,7 @@ from .models import Post
 from .forms import PostForm
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+from django.contrib.auth.decorators import permission_required
 
 def get_index(request):
     posts = Post.objects.filter(published_date__lte = timezone.now())
@@ -52,3 +53,17 @@ def edit_read_post(request, id):
     else:
         form=PostForm(instance=post)
         return render(request, "blog/post_form.html", {"form":form})
+ 
+ 
+ 
+def get_unpublished_post(request):
+    posts =Posts.objects.filter(published_date__gte = timezone.now())
+    return render(request, "blog/index.html", {'posts': posts})
+        
+        
+@ permission_required('blog.can_publish')        
+def publish_post(request, id):
+    post = get_object_or_404(Post, pk=id)
+    post.published_date = timezone.now()
+    post.save()
+    return redirect(read_post, post.id)
